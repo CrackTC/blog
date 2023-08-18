@@ -36,7 +36,7 @@ func getWikiDestination(name string) string {
 	blogPath := filepath.Join(c.StaticPath, c.BlogDirectoryName)
 
 	if strings.ContainsRune(name, '/') { // absolute path
-		return filepath.Join(blogPath, name)
+		return filepath.Join("/article", name)
 	}
 
 	var res string
