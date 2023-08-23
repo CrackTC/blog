@@ -2,7 +2,6 @@ package file
 
 import (
 	"io/fs"
-	"log"
 	"path/filepath"
 	"sort"
 	"time"
@@ -43,10 +42,8 @@ type FileTime struct {
 
 func GetFileTimesRecursive(root string, ignoredPaths []string) []FileTime {
 	var res []FileTime
-	log.Println(root, ignoredPaths)
 	var cstZone = time.FixedZone("CST", 8*3600)
 	filepath.WalkDir(root, func(path string, ent fs.DirEntry, err error) error {
-		log.Println(path, ent, err)
 		base := ent.Name()
 		for _, ignoredPath := range ignoredPaths {
 			if base == ignoredPath {
