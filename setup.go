@@ -35,7 +35,7 @@ func updateModTime(path string, repo *git.Repository) error {
 			if _, ok := times[stat.Name]; ok {
 				continue
 			}
-			times[stat.Name] = commit.Author.When
+			times[stat.Name] = commit.Committer.When
 		}
 		return nil
 	})
@@ -71,6 +71,21 @@ func updateRepo(path string, c <-chan time.Time) {
 	}
 }
 
+func setModTimeZero() {
+	path := filepath.Join(config.Get().StaticPath, "blog")
+	filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			log.Println("[ERROR] failed to walk file:", err.Error())
+			return nil
+		}
+		if info.IsDir() {
+			return nil
+		}
+		os.Chtimes(path, time.Time{}, time.UnixMilli(1))
+		return nil
+	})
+}
+
 func setup() {
 	path := filepath.Join(config.Get().StaticPath, "blog")
 	if isNotExist(path) {
@@ -87,6 +102,7 @@ func setup() {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
+		setModTimeZero()
 		err = updateModTime(path, repo)
 		if err != nil {
 			log.Println("[ERROR] failed to update file modtime:", err.Error())
