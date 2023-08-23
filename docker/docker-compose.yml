@@ -1,0 +1,9 @@
+services:
+  blog:
+    image: cracktc/blog
+    restart: always
+    ports:
+      - '8880:8880'
+  redis:
+    image: redis:alpine
+    restart: always
