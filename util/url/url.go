@@ -6,6 +6,7 @@ var replaceMap map[string]string = map[string]string{
 	"#": "%23",
 	"%": "%25",
 	"?": "%3F",
+	"&": "%26",
 }
 
 func Encode(s string) string {
