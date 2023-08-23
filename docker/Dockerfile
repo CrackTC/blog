@@ -1,4 +1,4 @@
-FROM scratch
+FROM ubuntu
 COPY ca-certificates.crt /etc/ssl/certs/
 COPY build /
 ENTRYPOINT ["/blog"]

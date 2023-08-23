@@ -41,10 +41,7 @@ func updateModTime(path string, repo *git.Repository) error {
 	})
 
 	for name, time := range times {
-		err := os.Chtimes(filepath.Join(path, name), time, time)
-		if err != nil {
-			log.Println("[ERROR] failed to get commit stats:", err.Error())
-		}
+		os.Chtimes(filepath.Join(path, name), time, time)
 	}
 	return nil
 }

@@ -2,7 +2,6 @@ package article
 
 import (
 	"html/template"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +9,7 @@ import (
 	"strings"
 
 	"sora.zip/blog/util/redis"
+	"sora.zip/blog/util/url"
 )
 
 type handler struct {
@@ -35,21 +35,6 @@ type dirData struct {
 	Crumbs []linkData
 }
 
-func HtmlFromFile(path string) (string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
-
-	bytes, err := io.ReadAll(file)
-	if err != nil {
-		return "", err
-	}
-
-	return Markdown2Html(string(bytes)), nil
-}
-
 func GetCrumbs(path string) []linkData {
 	if path == "" {
 		return []linkData{{"article", "javascript:void(0)"}}
@@ -59,8 +44,10 @@ func GetCrumbs(path string) []linkData {
 	res := make([]linkData, 0, len(arr)+1)
 	res = append(res, linkData{"article", "/article/"})
 	for i, base := range arr {
-		url := "/article/" + strings.Join(arr[:i+1], "/")
-		res = append(res, linkData{base, template.URL(url)})
+		res = append(res, linkData{
+			base,
+			template.URL(url.Encode("/article/" + strings.Join(arr[:i+1], "/"))),
+		})
 	}
 	res[len(res)-1].URL = "javascript:void(0)" // last one is current page
 	return res
@@ -80,12 +67,7 @@ func (h handler) ServeArticle(w http.ResponseWriter, path string) {
 		}
 
 		path = filepath.Join(h.blogRoot, path)
-		html, err := HtmlFromFile(path)
-		if err != nil {
-			log.Printf("[ERROR] Failed to get html from file %s: %s\n", path, err.Error())
-			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
-			return
-		}
+		html := HtmlFromFile(path)
 		data.Content = template.HTML(html)
 
 		if err := redis.Set(key, html); err != nil {
@@ -127,8 +109,10 @@ func (h handler) ServeDir(w http.ResponseWriter, path string) {
 			if file.IsDir() {
 				name += "/"
 			}
-			url := filepath.Join("/article", path, name)
-			data.Files = append(data.Files, linkData{name, template.URL(url)})
+			data.Files = append(data.Files, linkData{
+				name,
+				template.URL(url.Encode(filepath.Join("/article", path, name))),
+			})
 		}
 	}
 

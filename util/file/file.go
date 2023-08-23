@@ -42,10 +42,8 @@ type FileTime struct {
 
 func GetFileTimesRecursive(root string, ignoredPaths []string) []FileTime {
 	var res []FileTime
-	log.Println("111")
 	log.Println(root, ignoredPaths)
 	filepath.WalkDir(root, func(path string, ent fs.DirEntry, err error) error {
-		log.Println("222")
 		log.Println(path, ent, err)
 		base := ent.Name()
 		for _, ignoredPath := range ignoredPaths {
