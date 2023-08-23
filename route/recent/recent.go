@@ -9,6 +9,7 @@ import (
 
 	"sora.zip/blog/util/file"
 	"sora.zip/blog/util/redis"
+	"sora.zip/blog/util/url"
 )
 
 type handler struct {
@@ -79,10 +80,10 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			name := file.Name[:len(file.Name)-len(filepath.Ext(file.Name))]
 			redisData[i*3] = name
 			path := file.Path[len(h.blogPath)+1:]
-			redisData[i*3+1] = path
+			redisData[i*3+1] = url.Encode(path)
 			redisData[i*3+2] = file.ModTime
 			if i >= start && i < start+h.blogsPerPage {
-				data.Items = append(data.Items, itemData{file.Name, path, file.ModTime})
+				data.Items = append(data.Items, itemData{file.Name, url.Encode(path), file.ModTime})
 			}
 		}
 		if err := redis.SetList(key, redisData); err != nil {
