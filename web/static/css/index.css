@@ -1,0 +1,118 @@
+@import "coloring.css";
+@import "fonts.css";
+
+/* body { */
+/*     background: url("/static/img/index/index.png") center center no-repeat; */
+/*     background-attachment: fixed; */
+/*     background-size: cover; */
+/* } */
+
+.banner_div {
+    overflow: hidden;
+}
+
+.main_nav>ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0;
+    justify-content: center;
+}
+
+.main_nav>ul>li {
+    display: inline-block;
+    margin: 0 1em;
+}
+
+.main_nav>ul>li>a {
+    font-family: MapleMono, monospace;
+    font-style: italic;
+    font-size: 1.5em;
+    font-weight: 900;
+    transition: background-color 0.2s ease-in-out;
+    text-decoration: none;
+    padding: 0.2em 0.5em;
+    margin: 0.2em 0;
+    border-radius: 0.2em;
+}
+
+.recent_div {
+    margin: 3em;
+}
+
+.recent_link {
+    display: block;
+    font-family: MapleMono, monospace;
+    font-style: italic;
+    font-size: 1em;
+    transition: background-color 0.2s ease-in-out;
+    text-decoration: none;
+    border-radius: 0.5em;
+    padding: 0.5em;
+}
+
+.whoami_hr {
+    margin: 4em 4em 4em 4em;
+}
+
+
+.whoami {
+    margin: 4em;
+    font-family: MapleMono, monospace;
+    font-style: italic;
+    font-size: 1.5em;
+    font-weight: 900;
+}
+
+.whoami_div {
+    padding: 0.5em;
+}
+
+.whoami_img {
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+    border-radius: 0.5em;
+}
+
+.whoami>a {
+    text-decoration: none;
+    border-radius: 0.2em;
+    padding: 0 0.2em;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.whoami>code {
+    font-family: MapleMono, monospace;
+    font-style: normal;
+    font-size: smaller;
+    padding: 0 0.2em;
+    border-radius: 0.2em;
+}
+
+.page_nav {
+    margin: 3em;
+    display: grid;
+    grid-auto-flow: column;
+}
+
+.page_link {
+    display: block;
+    text-decoration: none;
+    font-family: MapleMono, monospace;
+    font-style: italic;
+    font-size: 2em;
+    text-align: center;
+    border-radius: 0.3em;
+    padding: 0.5em;
+    transition: background-color 0.2s ease-in-out;
+}
+
+h1 {
+    text-align: center;
+    margin: 3em;
+    font-family: MapleMono, monospace;
+    font-style: italic;
+    font-weight: 900;
+}

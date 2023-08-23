@@ -1,0 +1,68 @@
+@font-face {
+    font-family: MapleMono;
+    font-style: normal;
+    src: url('../fonts/MapleMono-Regular.woff2');
+}
+
+@font-face {
+    font-family: MapleMono;
+    font-style: italic;
+    font-weight: normal;
+    src: url('../fonts/MapleMono-Italic.woff2');
+}
+
+@font-face {
+    font-family: MapleMono;
+    font-style: normal;
+    font-weight: bold;
+    src: url('../fonts/MapleMono-Bold.woff2');
+}
+
+@font-face {
+    font-family: MapleMono;
+    font-style: italic;
+    font-weight: bold;
+    src: url('../fonts/MapleMono-BoldItalic.woff2');
+}
+
+@font-face {
+    font-family: MapleMono;
+    font-style: normal;
+    font-weight: 300;
+    src: url('../fonts/MapleMono-Light.woff2');
+}
+
+@font-face {
+    font-family: MapleMono;
+    font-style: italic;
+    font-weight: 300;
+    src: url('../fonts/MapleMono-LightItalic.woff2');
+}
+
+@font-face {
+    font-family: 'Source Serif 4';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../fonts/source-serif-4-v7-latin-regular.woff2')
+}
+
+@font-face {
+    font-family: 'Noto Serif SC';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../fonts/noto-serif-sc-v22-chinese-simplified-regular.woff2')
+}
+
+@font-face {
+    font-family: 'Noto Serif SC';
+    font-style: normal;
+    font-weight: 900;
+    src: url('../fonts/noto-serif-sc-v22-chinese-simplified-900.woff2')
+}
+
+@font-face {
+    font-family: 'Noto Serif SC';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../fonts/noto-serif-sc-v22-chinese-simplified-600.woff2')
+}

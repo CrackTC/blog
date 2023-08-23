@@ -1,0 +1,36 @@
+{{define "article_main"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{.Title}}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+
+    {{template "head" .}}
+
+    <link rel="stylesheet" href="/static/css/article.css" />
+</head>
+
+<body class="article">
+    <nav class="pages">
+        <ul>
+            <li><a href="/">cd</a></li>
+            <li><a href="/recent">ps</a></li>
+            <li><a href="/article">ll</a></li>
+            <li><a href="/whoami">whoami</a></li>
+        </ul>
+    </nav>
+    <nav class="crumbs">
+        <ol>
+            {{range .Crumbs}}
+            <li class="crumb"><a href="{{.URL}}">{{.Name}}</a></li>
+            {{end}}
+        </ol>
+    </nav>
+    {{template "body" .}}
+</body>
+
+</html>
+{{end}}

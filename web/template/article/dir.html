@@ -1,0 +1,10 @@
+{{define "head"}}
+{{end}}
+
+{{define "body"}}
+<ol class="dir_list">
+    {{range .Files}}
+    <li class="dir_item"><a class="dir_link" href="{{.URL}}">{{.Name}}</a></li>
+    {{end}}
+</ol>
+{{end}}

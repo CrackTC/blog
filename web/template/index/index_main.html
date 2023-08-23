@@ -1,0 +1,31 @@
+{{define "index_main"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{.Title}}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <link rel="stylesheet" href="/static/css/index.css" />
+</head>
+
+<body class="index">
+    <div class="banner_div">
+        <h1>&gt; <span class="banner_passions">Passions</span> &amp; <span class="banner_dreams">dreams</span> like
+            <span class="banner_sora">sora</span>, *zipped* up in my <span class="banner_heart">heart</span>
+        </h1>
+        <nav class="main_nav">
+            <ul>
+                <li><a href="/">cd</a></li>
+                <li><a href="/recent">ps</a></li>
+                <li><a href="/article">ll</a></li>
+                <li><a href="/whoami">whoami</a></li>
+            </ul>
+        </nav>
+    </div>
+    {{template "body" .}}
+</body>
+
+</html>
+{{end}}

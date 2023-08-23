@@ -1,0 +1,26 @@
+:root {
+    --nord-0-deeper : #242933;
+    --nord0         : #2e3440;
+    --nord1         : #3b4252;
+    --nord2         : #434c5e;
+    --nord3         : #4c566a;
+    --nord3-lighter : #7b88a1;
+    --nord4-deeper  : #abb9cf;
+    --nord4         : #d8dee9;
+    --nord5         : #e5e9f0;
+    --nord6         : #eceff4;
+    --nord6-lighter : #f2f4f8;
+    --nord7         : #8fbcbb;
+    --nord7-deeper  : #76adac;
+    --nord8         : #88c0d0;
+    --nord9         : #81a1c1;
+    --nord10        : #5e81ac;
+    --nord11        : #bf616a;
+    --nord12        : #d08770;
+    --nord13        : #ebcb8b;
+    --nord14        : #a3be8c;
+    --nord14-deeper : #8fb073;
+    --nord15        : #b48ead;
+
+    color-scheme: dark light;
+}

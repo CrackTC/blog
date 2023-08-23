@@ -1,0 +1,16 @@
+{{define "head"}}
+<link rel="preload" href="/static/js/postproc.js" as="script" />
+<link rel="preload" href="/static/js/mathjax/tex-chtml.js" as="script" />
+<link rel="preload" href="/static/js/highlightjs/highlight.min.js" as="script" />
+{{end}}
+
+{{define "body"}}
+<div id="content">
+    <h1 id="title">{{.Title}}</h1>
+    {{.Content}}
+</div>
+<script> MathJax = {tex: {inlineMath: [['$', '$']]}}; </script>
+<script src="/static/js/mathjax/tex-chtml.js"></script>
+<script src="/static/js/highlightjs/highlight.min.js"></script>
+<script src="/static/js/postproc.js"></script>
+{{end}}

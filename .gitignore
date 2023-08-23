@@ -1,2 +1,4 @@
 web/static/blog
 web/static/app/sharpdown
+bin
+docker/build

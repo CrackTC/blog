@@ -1,0 +1,203 @@
+@import 'highlight.css';
+
+.banner_passions {
+    color: var(--nord12);
+}
+
+.banner_dreams {
+    color: var(--nord15);
+}
+
+.banner_sora {
+    /* color: var(--nord9); */
+    background: linear-gradient(90deg, var(--nord9), var(--nord7));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.banner_heart {
+    color: var(--nord11);
+}
+
+@media (prefers-color-scheme: dark) {
+    body.article {
+        background-color: var(--nord-0-deeper);
+        color: var(--nord4);
+    }
+
+    body.index {
+        background-color: var(--nord0);
+        color: var(--nord4);
+    }
+
+    #content {
+        background-color: var(--nord0);
+    }
+
+    .crumb::before {
+        background-color: var(--nord4);
+    }
+
+    .pages>ul>li>a {
+        color: var(--nord4);
+    }
+
+    .pages>ul>li>a:hover {
+        /* nord4 transparent */
+        background-color: #4c566aaa;
+    }
+
+    .main_nav>ul>li>a {
+        color: var(--nord4);
+    }
+
+    .main_nav>ul>li>a:hover {
+        /* nord4 transparent */
+        background-color: #4c566aaa;
+    }
+
+    .dir_link:hover::before {
+        background-color: var(--nord4);
+    }
+
+    a {
+        color: var(--nord8);
+    }
+
+    a:hover {
+        background-color: var(--nord3);
+    }
+
+    blockquote {
+        color: var(--nord4-deeper);
+        border-left-color: var(--nord8);
+    }
+
+    .code-wrapper {
+        background-color: var(--nord1)
+    }
+
+    pre>code {
+        color: var(--nord4);
+    }
+
+    :not(pre)>code {
+        background-color: var(--nord1);
+    }
+
+    hr {
+        border: 1px solid var(--nord3);
+    }
+
+    thead {
+        background-color: var(--nord2);
+    }
+
+    tbody {
+        background-color: var(--nord1);
+    }
+
+    tbody>tr {
+        border-top: 2px solid var(--nord0);
+    }
+
+    td+td {
+        border-left: 2px solid var(--nord0);
+    }
+
+    th+th {
+        border-left: 2px solid var(--nord0);
+    }
+
+    ::selection {
+        background-color: var(--nord4);
+        color: var(--nord0);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    body.article {
+        background-color: var(--nord6-lighter);
+        color: var(--nord2);
+    }
+
+    body.index {
+        background-color: var(--nord5);
+        color: var(--nord2);
+    }
+
+    #content {
+        background-color: var(--nord5);
+    }
+
+    .crumb::before {
+        background-color: var(--nord2);
+    }
+
+    .pages>ul>li>a {
+        color: var(--nord3);
+    }
+
+    .main_nav>ul>li>a {
+        color: var(--nord3);
+    }
+
+    .dir_link:hover::before {
+        background-color: var(--nord2);
+    }
+
+    a {
+        color: var(--nord10);
+    }
+
+    a:hover {
+        background-color: var(--nord4);
+    }
+
+    blockquote {
+        color: var(--nord3-lighter);
+        border-left-color: var(--nord9);
+    }
+
+    .code-wrapper {
+        background-color: var(--nord4)
+    }
+
+    pre>code {
+        color: var(--nord2);
+    }
+
+    :not(pre)>code {
+        background-color: var(--nord4);
+    }
+
+    hr {
+        border: 1px solid var(--nord4);
+    }
+
+    thead {
+        background-color: var(--nord4-deeper);
+    }
+
+    tbody {
+        background-color: var(--nord4);
+    }
+
+    tbody>tr {
+        border-top: 2px solid var(--nord5);
+    }
+
+    td+td {
+        border-left: 2px solid var(--nord5);
+    }
+
+    th+th {
+        border-left: 2px solid var(--nord5);
+    }
+
+    ::selection {
+        color: var(--nord4);
+        background-color: var(--nord2);
+    }
+}

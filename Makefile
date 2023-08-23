@@ -1,0 +1,12 @@
+build:
+	CGO_LDFLAGS_ALLOW='.*' go build -o bin/blog
+
+docker: FORCE
+	rm -rf docker/build
+	mkdir -p docker/build
+	cp bin/blog docker/build
+	cp config.json docker/build
+	cp -r web docker/build
+	cd docker && docker buildx build -t cracktc/blog .
+
+FORCE:

@@ -1,0 +1,18 @@
+{{define "body"}}
+<div class="recent_div">
+    {{range .Items}}
+    <a class="recent_link" href="/article/{{.URL}}">
+        <h2>{{.Title}}</h2>
+        <p class="recent_date">🕖 {{.ModTime}}</p>
+    </a>
+    {{end}}
+</div>
+<nav class="page_nav">
+    {{if .HasPrev}}
+    <a class="page_link" href="/recent/?page={{.PrevPage}}">&lt;C-b&gt;</a>
+    {{end}}
+    {{if .HasNext}}
+    <a class="page_link" href="/recent/?page={{.NextPage}}">&lt;C-f&gt;</a>
+    {{end}}
+</nav>
+{{end}}

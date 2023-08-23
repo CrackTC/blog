@@ -1,0 +1,19 @@
+{
+    "port": 8880,
+    "static_path": "web/static",
+    "template_path": "web/template",
+    "ignored_paths": [
+        ".git",
+        ".github",
+        ".gitignore",
+        ".obsidian",
+        ".obsidian.vimrc",
+        "img",
+        "credit_ts.u8"
+    ],
+    "blog_remote_url": "https://github.com/CrackTC/nolib.git",
+    "blog_fetch_interval": "1h",
+    "blogs_per_page": 10,
+    "redis_url": "redis://localhost:6379",
+    "redis_expiration": "240h"
+}
