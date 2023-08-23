@@ -5,6 +5,7 @@ import (
 	"log"
 	"path/filepath"
 	"sort"
+	"time"
 )
 
 type FileTree struct {
@@ -43,6 +44,7 @@ type FileTime struct {
 func GetFileTimesRecursive(root string, ignoredPaths []string) []FileTime {
 	var res []FileTime
 	log.Println(root, ignoredPaths)
+	var cstZone = time.FixedZone("CST", 8*3600)
 	filepath.WalkDir(root, func(path string, ent fs.DirEntry, err error) error {
 		log.Println(path, ent, err)
 		base := ent.Name()
@@ -59,7 +61,7 @@ func GetFileTimesRecursive(root string, ignoredPaths []string) []FileTime {
 			if info, err := ent.Info(); err != nil {
 				return err
 			} else {
-				time := info.ModTime().Format("2006-01-02 15:04:05")
+				time := info.ModTime().In(cstZone).Format("2006-01-02 15:04:05")
 				res = append(res, FileTime{base, path, time})
 			}
 		}
