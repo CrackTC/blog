@@ -19,7 +19,7 @@ type handler struct {
 }
 
 type linkData struct {
-	Name string
+	Name template.HTML
 	URL  template.URL
 }
 
@@ -45,7 +45,7 @@ func GetCrumbs(path string) []linkData {
 	res = append(res, linkData{"article", "/article/"})
 	for i, base := range arr {
 		res = append(res, linkData{
-			base,
+			template.HTML(base),
 			template.URL(url.Encode("/article/" + strings.Join(arr[:i+1], "/"))),
 		})
 	}
@@ -110,7 +110,7 @@ func (h handler) ServeDir(w http.ResponseWriter, path string) {
 				name += "/"
 			}
 			data.Files = append(data.Files, linkData{
-				name,
+				template.HTML(name),
 				template.URL(url.Encode(filepath.Join("/article", path, name))),
 			})
 		}
