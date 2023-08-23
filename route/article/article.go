@@ -24,7 +24,7 @@ type linkData struct {
 }
 
 type articleData struct {
-	Title   string
+	Title   template.HTML
 	Content template.HTML
 	Crumbs  []linkData
 }
@@ -56,7 +56,7 @@ func GetCrumbs(path string) []linkData {
 func (h handler) ServeArticle(w http.ResponseWriter, path string) {
 	log.Println("[INFO] Serving article:", path)
 
-	data := articleData{Title: filepath.Base(path), Crumbs: GetCrumbs(path)}
+	data := articleData{Title: template.HTML(filepath.Base(path)), Crumbs: GetCrumbs(path)}
 	key := "[article]" + path
 
 	if html, err := redis.Get(key); err == nil {
