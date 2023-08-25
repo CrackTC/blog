@@ -6,12 +6,12 @@ import (
 	"path/filepath"
 )
 
-type handler struct {
+type Handler struct {
 	blogRoot     string
 	ignoredPaths []string
 }
 
-func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	endpoint := filepath.Base(r.URL.Path)
 	arguments := r.URL.Query()
 	log.Println("[INFO] Serving API:", endpoint)
@@ -22,6 +22,6 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func NewHandler(blogRoot string, ignoredPaths []string) handler {
-	return handler{blogRoot: blogRoot, ignoredPaths: ignoredPaths}
+func NewHandler(blogRoot string, ignoredPaths []string) Handler {
+	return Handler{blogRoot: blogRoot, ignoredPaths: ignoredPaths}
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"os"
 	"path/filepath"
@@ -26,7 +27,7 @@ func updateModTime(path string, repo *git.Repository) error {
 	}
 
 	times := make(map[string]time.Time)
-	logs.ForEach(func(commit *object.Commit) error {
+	err = logs.ForEach(func(commit *object.Commit) error {
 		stats, err := commit.Stats()
 		if err != nil {
 			log.Println("[ERROR] failed to get commit stats:", err.Error())
@@ -39,9 +40,12 @@ func updateModTime(path string, repo *git.Repository) error {
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
 
-	for name, time := range times {
-		os.Chtimes(filepath.Join(path, name), time, time)
+	for name, t := range times {
+		_ = os.Chtimes(filepath.Join(path, name), t, t)
 	}
 	return nil
 }
@@ -59,13 +63,13 @@ func updateRepo(path string, c <-chan time.Time) {
 		err = wt.Pull(&git.PullOptions{
 			Force: true,
 		})
-		if err != nil && err != git.NoErrAlreadyUpToDate {
+		if err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate) {
 			log.Println("[ERROR] failed to pull repo:", err.Error())
 			continue
 		}
 		err = updateModTime(path, repo)
 		if err != nil {
-			log.Println("[ERROR] failed to update file modtime:", err.Error())
+			log.Println("[ERROR] failed to update file mod time:", err.Error())
 			continue
 		}
 	}
@@ -73,7 +77,7 @@ func updateRepo(path string, c <-chan time.Time) {
 
 func setModTimeZero() {
 	path := filepath.Join(config.Get().StaticPath, "blog")
-	filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			log.Println("[ERROR] failed to walk file:", err.Error())
 			return nil
@@ -81,9 +85,12 @@ func setModTimeZero() {
 		if info.IsDir() {
 			return nil
 		}
-		os.Chtimes(path, time.Time{}, time.UnixMilli(1))
+		_ = os.Chtimes(path, time.Time{}, time.UnixMilli(1))
 		return nil
 	})
+	if err != nil {
+		log.Println(err.Error())
+	}
 }
 
 func setup() {
@@ -105,7 +112,7 @@ func setup() {
 		setModTimeZero()
 		err = updateModTime(path, repo)
 		if err != nil {
-			log.Println("[ERROR] failed to update file modtime:", err.Error())
+			log.Println("[ERROR] failed to update file mod time:", err.Error())
 		}
 	}
 

@@ -12,7 +12,7 @@ import (
 	"sora.zip/blog/util/url"
 )
 
-type handler struct {
+type Handler struct {
 	blogRoot     string
 	ignoredPaths []string
 	tpl          map[string]*template.Template
@@ -53,7 +53,7 @@ func GetCrumbs(path string) []linkData {
 	return res
 }
 
-func (h handler) ServeArticle(w http.ResponseWriter, path string) {
+func (h Handler) ServeArticle(w http.ResponseWriter, path string) {
 	log.Println("[INFO] Serving article:", path)
 
 	data := articleData{Title: template.HTML(filepath.Base(path)), Crumbs: GetCrumbs(path)}
@@ -75,10 +75,13 @@ func (h handler) ServeArticle(w http.ResponseWriter, path string) {
 		}
 	}
 
-	h.tpl["article"].ExecuteTemplate(w, "article_main", data)
+	err := h.tpl["article"].ExecuteTemplate(w, "article_main", data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
-func (h handler) ServeDir(w http.ResponseWriter, path string) {
+func (h Handler) ServeDir(w http.ResponseWriter, path string) {
 	log.Println("[INFO] Serving available articles:", path)
 
 	// remove trailing slash
@@ -116,10 +119,13 @@ func (h handler) ServeDir(w http.ResponseWriter, path string) {
 		}
 	}
 
-	h.tpl["dir"].ExecuteTemplate(w, "article_main", data)
+	err := h.tpl["dir"].ExecuteTemplate(w, "article_main", data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
-func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	// determine whether it is a directory
 	if info, err := os.Stat(filepath.Join(h.blogRoot, path)); err != nil {
@@ -132,7 +138,7 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func NewHandler(blogRoot string, ignoredPaths []string, templatePath string) handler {
+func NewHandler(blogRoot string, ignoredPaths []string, templatePath string) Handler {
 	tpl := make(map[string]*template.Template)
 	tpl["article"] = template.Must(template.ParseFiles(
 		filepath.Join(templatePath, "article/article.html"),
@@ -142,5 +148,5 @@ func NewHandler(blogRoot string, ignoredPaths []string, templatePath string) han
 		filepath.Join(templatePath, "article/dir.html"),
 		filepath.Join(templatePath, "article/article_main.html"),
 	))
-	return handler{blogRoot: blogRoot, ignoredPaths: ignoredPaths, tpl: tpl}
+	return Handler{blogRoot: blogRoot, ignoredPaths: ignoredPaths, tpl: tpl}
 }

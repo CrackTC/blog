@@ -1,9 +1,9 @@
 (function () {
     function replaceWikiLink() {
-        var elements = document.getElementsByClassName("wiki-link")
-        for (var i = 0; i < elements.length; i++) {
+        const elements = document.getElementsByClassName("wiki-link");
+        for (let i = 0; i < elements.length; i++) {
             let element = elements[i]
-            var href = element.getAttribute("href") + ".md"
+            const href = element.getAttribute("href") + ".md";
             fetch("/api/wiki?name=" + encodeURIComponent(href))
                 .then(r => r.json())
                 .then(data => element.setAttribute("href", data.dest))
@@ -11,11 +11,12 @@
     }
 
     function replaceEmbeddedFile() {
-        var elements = document.getElementsByClassName("embedded-file")
+        const elements = document.getElementsByClassName("embedded-file");
+
         function ReplaceImage(element, name, attr) {
-            var path = "/static/blog/" + window.location.pathname.split('/').slice(2, -1).join('/')
-            var src = path + '/img/' + encodeURIComponent(name)
-            var img = document.createElement("img")
+            const path = "/static/blog/" + window.location.pathname.split('/').slice(2, -1).join('/');
+            const src = path + '/img/' + encodeURIComponent(name);
+            const img = document.createElement("img");
             img.src = src
             img.alt = name
             if (attr) {
@@ -23,11 +24,11 @@
             }
             element.replaceWith(img)
         }
-        for (var i = 0; i < elements.length; i++) {
-            var element = elements[i]
-            var src = element.getAttribute("data-src")
-            var attr = element.getAttribute("data-attr")
-            var ext = src.split(".").pop()
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const src = element.getAttribute("data-src");
+            const attr = element.getAttribute("data-attr");
+            const ext = src.split(".").pop();
             switch (ext) {
                 case "md":
                     // markdown file
@@ -36,7 +37,7 @@
                     // image file
                     ReplaceImage(element, src, attr)
                     break;
-                case "mp3": case "webm": case "wav": case "m4a": case "ogg": case "3gp": case "flac":
+                case "mp3": case "wav": case "m4a": case "ogg": case "3gp": case "flac":
                     // audio file
                     break;
                 case "mp4": case "webm": case "ogv":
@@ -53,10 +54,10 @@
 
     // css: .table-wrapper { overflow-x: auto; }
     function wrapTableOverflow() {
-        var elements = document.getElementsByTagName("table")
-        for (var i = 0; i < elements.length; i++) {
-            var element = elements[i]
-            var wrapper = document.createElement("div")
+        const elements = document.getElementsByTagName("table");
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const wrapper = document.createElement("div");
             wrapper.className = "table-wrapper"
             element.parentElement.insertBefore(wrapper, element)
             wrapper.appendChild(element)
@@ -65,10 +66,10 @@
 
     // css: .code-wrapper { overflow-x: auto; }
     function wrapCodeBlockOverflow() {
-        var elements = document.getElementsByTagName("pre")
-        for (var i = 0; i < elements.length; i++) {
-            var element = elements[i]
-            var wrapper = document.createElement("div")
+        const elements = document.getElementsByTagName("pre");
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const wrapper = document.createElement("div");
             wrapper.className = "code-wrapper"
             element.parentElement.insertBefore(wrapper, element)
             wrapper.appendChild(element)

@@ -12,7 +12,7 @@ import (
 	"sora.zip/blog/util/url"
 )
 
-type handler struct {
+type Handler struct {
 	blogPath     string
 	blogsPerPage int
 	ignoredPaths []string
@@ -48,7 +48,7 @@ func getPage(r *http.Request) int {
 	}
 }
 
-func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	const key string = "[recent]"
 
 	page := getPage(r)
@@ -60,13 +60,13 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		for i := 0; i < len(val); i += 3 {
 			data.Items[i/3] = itemData{val[i], val[i+1], val[i+2]}
 		}
-		len, err := redis.Len(key)
+		l, err := redis.Len(key)
 		if err != nil {
 			log.Printf("[ERROR] Failed to get length of key %s: %s\n", key, err.Error())
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
-		data.HasNext = page*h.blogsPerPage*3 < int(len)
+		data.HasNext = page*h.blogsPerPage*3 < int(l)
 	} else if err != redis.Nil {
 		log.Printf("[ERROR] Failed to get value of key %s: %s\n", "key", err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -75,26 +75,30 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		files := file.GetFileTimesRecursive(h.blogPath, h.ignoredPaths)
 		redisData := make([]any, len(files)*3)
 		data.Items = make([]itemData, 0, h.blogsPerPage)
-		for i, file := range files {
+		data.HasNext = page*h.blogsPerPage < len(files)
+		for i, f := range files {
 			// remove extension
-			name := file.Name[:len(file.Name)-len(filepath.Ext(file.Name))]
+			name := f.Name[:len(f.Name)-len(filepath.Ext(f.Name))]
 			redisData[i*3] = name
-			path := file.Path[len(h.blogPath)+1:]
+			path := f.Path[len(h.blogPath)+1:]
 			redisData[i*3+1] = url.Encode(path)
-			redisData[i*3+2] = file.ModTime
+			redisData[i*3+2] = f.ModTime
 			if i >= start && i < start+h.blogsPerPage {
-				data.Items = append(data.Items, itemData{file.Name, url.Encode(path), file.ModTime})
+				data.Items = append(data.Items, itemData{f.Name, url.Encode(path), f.ModTime})
 			}
 		}
 		if err := redis.SetList(key, redisData); err != nil {
 			log.Printf("[ERROR] Failed to set value of key %s: %s\n", key, err.Error())
 		}
 	}
-	h.tpl.ExecuteTemplate(w, "index_main", data)
+	err := h.tpl.ExecuteTemplate(w, "index_main", data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
-func NewHandler(blogPath string, blogsPerPage int, templatePath string, ignoredPaths []string) handler {
-	return handler{blogPath, blogsPerPage, ignoredPaths, template.Must(template.ParseFiles(
+func NewHandler(blogPath string, blogsPerPage int, templatePath string, ignoredPaths []string) Handler {
+	return Handler{blogPath, blogsPerPage, ignoredPaths, template.Must(template.ParseFiles(
 		filepath.Join(templatePath, "index/recent.html"),
 		filepath.Join(templatePath, "index/index_main.html"),
 	))}

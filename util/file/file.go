@@ -2,19 +2,20 @@ package file
 
 import (
 	"io/fs"
+	"log"
 	"path/filepath"
 	"sort"
 	"time"
 )
 
-type FileTree struct {
+type Tree struct {
 	Name     string
-	Children []*FileTree
+	Children []*Tree
 }
 
 func FindFile(root, name string, ignoredPaths []string) string {
 	var res string
-	filepath.WalkDir(root, func(path string, ent fs.DirEntry, err error) error {
+	err := filepath.WalkDir(root, func(path string, ent fs.DirEntry, err error) error {
 		base := ent.Name()
 		for _, ignoredPath := range ignoredPaths {
 			if base == ignoredPath {
@@ -31,19 +32,22 @@ func FindFile(root, name string, ignoredPaths []string) string {
 		}
 		return nil
 	})
+	if err != nil {
+		log.Println(err)
+	}
 	return res
 }
 
-type FileTime struct {
+type Time struct {
 	Name    string
 	Path    string
 	ModTime string
 }
 
-func GetFileTimesRecursive(root string, ignoredPaths []string) []FileTime {
-	var res []FileTime
+func GetFileTimesRecursive(root string, ignoredPaths []string) []Time {
+	var res []Time
 	var cstZone = time.FixedZone("CST", 8*3600)
-	filepath.WalkDir(root, func(path string, ent fs.DirEntry, err error) error {
+	err := filepath.WalkDir(root, func(path string, ent fs.DirEntry, err error) error {
 		base := ent.Name()
 		for _, ignoredPath := range ignoredPaths {
 			if base == ignoredPath {
@@ -58,12 +62,15 @@ func GetFileTimesRecursive(root string, ignoredPaths []string) []FileTime {
 			if info, err := ent.Info(); err != nil {
 				return err
 			} else {
-				time := info.ModTime().In(cstZone).Format("2006-01-02 15:04:05")
-				res = append(res, FileTime{base, path, time})
+				t := info.ModTime().In(cstZone).Format("2006-01-02 15:04:05")
+				res = append(res, Time{base, path, t})
 			}
 		}
 		return nil
 	})
+	if err != nil {
+		log.Println(err)
+	}
 
 	sort.Slice(res, func(i, j int) bool {
 		return res[i].ModTime > res[j].ModTime

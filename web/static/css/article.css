@@ -20,7 +20,7 @@
 
 .table-wrapper {
     border-radius: 8px;
-    box-shadow: rgba(15, 17, 21, 0.2) 0px 3px 6px 0px;
+    box-shadow: rgba(15, 17, 21, 0.2) 0 3px 6px 0;
     width: max-content;
     max-width: 100%;
     overflow-x: auto;
@@ -30,7 +30,7 @@
     margin: 1em 0;
     padding: 0 1em;
     border-radius: 8px;
-    box-shadow: rgba(15, 17, 21, 0.2) 0px 3px 6px 0px;
+    box-shadow: rgba(15, 17, 21, 0.2) 0 3px 6px 0;
     width: max-content;
     max-width: calc(100% - 2em);
     overflow-x: auto;
@@ -190,14 +190,14 @@ blockquote {
     border-left-width: 0.2em;
     border-left-style: solid;
     padding-left: 1.5em;
-    margin: 1em 0px;
+    margin: 1em 0;
     word-break: break-all;
 }
 
 img {
     max-width: 100%;
     border-radius: 8px;
-    box-shadow: rgba(15, 17, 21, 0.2) 0px 3px 6px 0px;
+    box-shadow: rgba(15, 17, 21, 0.2) 0 3px 6px 0;
 }
 
 table {

@@ -15,7 +15,7 @@ type data struct {
 	Dest string `json:"dest"`
 }
 
-func (h handler) getWikiDestination(name string) string {
+func (h Handler) getWikiDestination(name string) string {
 	key := "[wiki]" + name
 	if val, err := redis.Get(key); err == nil {
 		return val
@@ -43,12 +43,14 @@ func (h handler) getWikiDestination(name string) string {
 	return dest
 }
 
-func (h handler) wiki(w http.ResponseWriter, arguments map[string][]string) {
+func (h Handler) wiki(w http.ResponseWriter, arguments map[string][]string) {
 	dest := data{Dest: h.getWikiDestination(arguments["name"][0])}
 
 	if bytes, err := json.Marshal(dest); err != nil {
 		log.Printf("[ERROR] Json marshal failed: %s\n", err.Error())
 	} else {
-		w.Write(bytes)
+		if _, err := w.Write(bytes); err != nil {
+			return
+		}
 	}
 }

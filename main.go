@@ -24,5 +24,8 @@ func main() {
 	http.Handle("/article/", http.StripPrefix("/article/", article.NewHandler(blogPath, c.IgnoredPaths, c.TemplatePath)))
 	http.Handle("/recent/", http.StripPrefix("/recent/", recent.NewHandler(blogPath, c.BlogsPerPage, c.TemplatePath, c.IgnoredPaths)))
 	http.Handle("/whoami/", http.StripPrefix("/whoami/", whoami.NewHandler(c.TemplatePath)))
-	http.ListenAndServe(":"+strconv.Itoa(c.Port), nil)
+	err := http.ListenAndServe(":"+strconv.Itoa(c.Port), nil)
+	if err != nil {
+		panic(err)
+	}
 }

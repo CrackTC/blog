@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-type handler struct {
+type Handler struct {
 	tpl *template.Template
 }
 
@@ -15,14 +15,17 @@ type indexData struct {
 	Title string
 }
 
-func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h Handler) ServeHTTP(w http.ResponseWriter, _ *http.Request) {
 	log.Println("[INFO] Serving index")
-	h.tpl.ExecuteTemplate(w, "index_main", indexData{Title: "zipped sora"})
+	err := h.tpl.ExecuteTemplate(w, "index_main", indexData{Title: "zipped sora"})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
-func NewHandler(templatePath string) handler {
+func NewHandler(templatePath string) Handler {
 	tpl := template.Must(template.ParseFiles(filepath.Join(templatePath, "index/index.html"), filepath.Join(templatePath, "index/index_main.html")))
-	handler := handler{tpl: tpl}
+	handler := Handler{tpl: tpl}
 
 	return handler
 }

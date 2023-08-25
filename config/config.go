@@ -40,7 +40,9 @@ func init() {
 		log.Println("[info] config.json not found, using default config")
 		return
 	}
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 	decoder := json.NewDecoder(file)
 	config = &Config{}
 	err = decoder.Decode(config)

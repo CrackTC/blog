@@ -2,7 +2,7 @@ package url
 
 import "strings"
 
-var replaceMap map[string]string = map[string]string{
+var replaceMap = map[string]string{
 	"#": "%23",
 	"%": "%25",
 	"?": "%3F",
