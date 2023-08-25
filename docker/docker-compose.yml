@@ -4,6 +4,8 @@ services:
     restart: always
     ports:
       - '8880:8880'
+    volumes:
+      - ./blog:/web/blog
   redis:
     image: redis:alpine
     restart: always
