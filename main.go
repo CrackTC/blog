@@ -19,7 +19,7 @@ func main() {
 	blogPath := filepath.Join(c.StaticPath, "blog")
 	setup()
 	http.Handle("/", index.NewHandler(c.TemplatePath))
-	http.Handle("/api/", http.StripPrefix("/api/", api.NewHandler(blogPath, c.IgnoredPaths)))
+	http.Handle("/api/", http.StripPrefix("/api/", api.NewHandler(c.APIKey, blogPath, c.IgnoredPaths)))
 	http.Handle("/static/", http.StripPrefix("/static/", static.NewHandler(c.StaticPath)))
 	http.Handle("/article/", http.StripPrefix("/article/", article.NewHandler(blogPath, c.IgnoredPaths, c.TemplatePath)))
 	http.Handle("/recent/", http.StripPrefix("/recent/", recent.NewHandler(blogPath, c.BlogsPerPage, c.TemplatePath, c.IgnoredPaths)))

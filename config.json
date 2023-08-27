@@ -1,4 +1,5 @@
 {
+    "api_key": "<api key here>",
     "port": 8880,
     "static_path": "web/static",
     "template_path": "web/template",

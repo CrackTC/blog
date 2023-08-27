@@ -11,8 +11,10 @@ import (
 	"sora.zip/blog/util/redis"
 )
 
-type data struct {
-	Dest string `json:"dest"`
+type wikiResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	Dest    string `json:"dest"`
 }
 
 func (h Handler) getWikiDestination(name string) string {
@@ -44,13 +46,9 @@ func (h Handler) getWikiDestination(name string) string {
 }
 
 func (h Handler) wiki(w http.ResponseWriter, arguments map[string][]string) {
-	dest := data{Dest: h.getWikiDestination(arguments["name"][0])}
-
-	if bytes, err := json.Marshal(dest); err != nil {
-		log.Printf("[ERROR] Json marshal failed: %s\n", err.Error())
+	if len(arguments["name"]) == 0 {
+		json.NewEncoder(w).Encode(wikiResponse{Success: false, Message: "No name provided", Dest: ""})
 	} else {
-		if _, err := w.Write(bytes); err != nil {
-			return
-		}
+		json.NewEncoder(w).Encode(wikiResponse{Success: true, Message: "", Dest: h.getWikiDestination(arguments["name"][0])})
 	}
 }

@@ -1,16 +1,13 @@
 package main
 
 import (
-	"errors"
 	"log"
 	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing/object"
-	"github.com/go-git/go-git/v5/plumbing/transport"
 	"sora.zip/blog/config"
+	"sora.zip/blog/util/git"
 )
 
 func isNotExist(path string) bool {
@@ -18,59 +15,16 @@ func isNotExist(path string) bool {
 	return err != nil && os.IsNotExist(err)
 }
 
-func updateModTime(path string, repo *git.Repository) error {
-	logs, err := repo.Log(&git.LogOptions{
-		Order: git.LogOrderCommitterTime,
-	})
-	if err != nil {
-		return err
-	}
-
-	times := make(map[string]time.Time)
-	err = logs.ForEach(func(commit *object.Commit) error {
-		stats, err := commit.Stats()
-		if err != nil {
-			log.Println("[ERROR] failed to get commit stats:", err.Error())
-		}
-		for _, stat := range stats {
-			if _, ok := times[stat.Name]; ok {
-				continue
-			}
-			times[stat.Name] = commit.Committer.When
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-
-	for name, t := range times {
-		_ = os.Chtimes(filepath.Join(path, name), t, t)
-	}
-	return nil
-}
-
 func updateRepo(path string, c <-chan time.Time) {
 	for range c {
-		repo, err := git.PlainOpen(path)
+		err := git.PullRepo(path)
 		if err != nil {
-			log.Fatal("[ERROR] failed to open repo:", err.Error())
-		}
-		wt, err := repo.Worktree()
-		if err != nil {
-			log.Fatal("[ERROR] failed to get repo worktree:", err.Error())
-		}
-		err = wt.Pull(&git.PullOptions{
-			Force: true,
-		})
-		if err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate) {
-			log.Println("[ERROR] failed to pull repo:", err.Error())
+			log.Println("[ERROR] failed to update repo:", err.Error())
 			continue
 		}
-		err = updateModTime(path, repo)
+		err = git.UpdateModTime(path)
 		if err != nil {
 			log.Println("[ERROR] failed to update file mod time:", err.Error())
-			continue
 		}
 	}
 }
@@ -96,30 +50,26 @@ func setModTimeZero() {
 func setup() {
 	path := filepath.Join(config.Get().StaticPath, "blog")
 	if isNotExist(path) || isNotExist(filepath.Join(path, ".git")) {
-		err := os.MkdirAll(path, 0755)
-		if err != nil {
+
+		if err := os.MkdirAll(path, 0755); err != nil {
 			log.Fatal(err.Error())
 		}
+
 		url := config.Get().BlogRemoteURL
-		proxy := transport.ProxyOptions{URL: os.Getenv("http_proxy")}
-		repo, err := git.PlainClone(path, false, &git.CloneOptions{
-			URL:          url,
-			ProxyOptions: proxy,
-		})
-		if err != nil {
+		if err := git.CloneRepo(url, path); err != nil {
 			log.Fatal(err.Error())
 		}
+
 		setModTimeZero()
-		err = updateModTime(path, repo)
-		if err != nil {
+		if err := git.UpdateModTime(path); err != nil {
 			log.Println("[ERROR] failed to update file mod time:", err.Error())
 		}
 	}
 
-	duration, err := time.ParseDuration(config.Get().BlogFetchInterval)
-	if err != nil {
+	if duration, err := time.ParseDuration(config.Get().BlogFetchInterval); err != nil {
 		log.Fatal("[ERROR] failed to parse fetch interval:", err.Error())
+	} else {
+		ticker := time.NewTicker(duration)
+		go updateRepo(path, ticker.C)
 	}
-	ticker := time.NewTicker(duration)
-	go updateRepo(path, ticker.C)
 }

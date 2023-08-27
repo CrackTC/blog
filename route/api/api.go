@@ -7,6 +7,7 @@ import (
 )
 
 type Handler struct {
+	apiKey       string
 	blogRoot     string
 	ignoredPaths []string
 }
@@ -19,9 +20,11 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch endpoint {
 	case "wiki":
 		h.wiki(w, arguments)
+	case "pull":
+		h.pull(w, arguments)
 	}
 }
 
-func NewHandler(blogRoot string, ignoredPaths []string) Handler {
-	return Handler{blogRoot: blogRoot, ignoredPaths: ignoredPaths}
+func NewHandler(apiKey string, blogRoot string, ignoredPaths []string) Handler {
+	return Handler{apiKey: apiKey, blogRoot: blogRoot, ignoredPaths: ignoredPaths}
 }
