@@ -54,6 +54,10 @@ func SetList(key string, values []interface{}) error {
 	return rdb.Expire(ctx, key, expiration).Err()
 }
 
+func RemoveKey(key string) {
+	rdb.Del(ctx, key)
+}
+
 func init() {
 	c := config.Get()
 	opt, err := redis.ParseURL(c.RedisURL)

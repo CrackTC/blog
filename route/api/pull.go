@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"sora.zip/blog/util/git"
+	"sora.zip/blog/util/redis"
 )
 
 type response struct {
@@ -22,5 +23,6 @@ func (h Handler) pull(w http.ResponseWriter, arguments map[string][]string) {
 		log.Println("[INFO] Pulling blog")
 		json.NewEncoder(w).Encode(response{Success: true, Message: "Pulling blog"})
 		git.PullRepo(h.blogRoot)
+		redis.RemoveKey("[recent]")
 	}
 }
