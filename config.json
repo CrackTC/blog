@@ -12,7 +12,7 @@
         "img",
         "credit_ts.u8"
     ],
-    "blog_remote_url": "https://github.com/CrackTC/nolib.git",
+    "blog_remote_url": "<your repo url>",
     "blog_fetch_interval": "1h",
     "blogs_per_page": 10,
     "redis_url": "redis://redis:6379",
