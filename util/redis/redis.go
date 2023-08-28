@@ -46,16 +46,17 @@ func SetList(key string, values []interface{}) error {
 	if err := rdb.RPush(ctx, key, values...).Err(); err != nil {
 		return err
 	}
-	expiration, err := time.ParseDuration(config.Get().BlogFetchInterval)
+	c := config.Get()
+	expiration, err := time.ParseDuration(c.RedisExpiration)
 	if err != nil {
-		log.Println("[WARN] Invalid redis expiration:", config.Get().BlogFetchInterval)
+		log.Println("[WARN] Invalid redis expiration:", c.RedisExpiration)
 		return nil
 	}
 	return rdb.Expire(ctx, key, expiration).Err()
 }
 
-func RemoveKey(key string) {
-	rdb.Del(ctx, key)
+func Flush() error {
+	return rdb.FlushAll(ctx).Err()
 }
 
 func init() {

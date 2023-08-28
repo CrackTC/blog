@@ -8,6 +8,7 @@ import (
 
 	"sora.zip/blog/config"
 	"sora.zip/blog/util/git"
+	"sora.zip/blog/util/redis"
 )
 
 func isNotExist(path string) bool {
@@ -25,6 +26,11 @@ func updateRepo(path string, c <-chan time.Time) {
 		err = git.UpdateModTime(path)
 		if err != nil {
 			log.Println("[ERROR] failed to update file mod time:", err.Error())
+			continue
+		}
+		err = redis.Flush()
+		if err != nil {
+			log.Println("[ERROR] failed to flush redis:", err.Error())
 		}
 	}
 }
