@@ -79,12 +79,14 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		for i, f := range files {
 			// remove extension
 			name := f.Name[:len(f.Name)-len(filepath.Ext(f.Name))]
+			path := url.Encode(f.Path[len(h.blogPath)+1:])
+
 			redisData[i*3] = name
-			path := f.Path[len(h.blogPath)+1:]
-			redisData[i*3+1] = url.Encode(path)
+			redisData[i*3+1] = path
 			redisData[i*3+2] = f.ModTime
+
 			if i >= start && i < start+h.blogsPerPage {
-				data.Items = append(data.Items, itemData{f.Name, url.Encode(path), f.ModTime})
+				data.Items = append(data.Items, itemData{name, path, f.ModTime})
 			}
 		}
 		if err := redis.SetList(key, redisData); err != nil {
