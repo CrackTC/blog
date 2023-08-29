@@ -1,4 +1,7 @@
-web/static/blog
-web/static/app/sharpdown
 bin
 docker/build
+web/static/app/sharpdown
+web/static/blog
+web/static/favicon.ico
+web/static/robots.txt
+web/static/sitemap.xml

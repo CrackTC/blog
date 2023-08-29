@@ -3,9 +3,12 @@ services:
     image: cracktc/blog
     restart: always
     ports:
-      - '8880:8880'
+      - "8880:8880"
     volumes:
-      - ./blog:/web/blog
+      - ./blog:/web/static/blog
+      - ./robots.txt:/web/static/robots.txt
+      - ./sitemap.xml:/web/static/sitemap.xml
+      - ./favicon.ico:/web/static/favicon.ico
       - ./config.json:/config.json
   redis:
     image: redis:alpine
