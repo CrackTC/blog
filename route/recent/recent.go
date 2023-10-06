@@ -52,10 +52,10 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	const key string = "[recent]"
 
 	page := getPage(r)
-	start := h.blogsPerPage * (page - 1) * 3
+	start := h.blogsPerPage * (page - 1)
 
 	data := recentData{Title: "ps", HasPrev: start > 0, PrevPage: page - 1, NextPage: page + 1}
-	if val, err := redis.GetList(key, int64(start), int64(h.blogsPerPage*3)); err == nil {
+	if val, err := redis.GetList(key, int64(start*3), int64(h.blogsPerPage*3)); err == nil {
 		data.Items = make([]itemData, len(val)/3)
 		for i := 0; i < len(val); i += 3 {
 			data.Items[i/3] = itemData{val[i], val[i+1], val[i+2]}
