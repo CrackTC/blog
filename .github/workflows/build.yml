@@ -1,0 +1,33 @@
+name: Go & Docker Build
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
+      - run: make build
+      - run: mkdir -p docker/build
+      - run: cp bin/blog docker/build
+      - run: cp sharpdown docker/build
+      - run: cp -r web docker/build
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: cracktc
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Docker Build & Push
+        uses: docker/build-push-action@v4
+        with:
+          context: docker
+          push: true
+          tags: cracktc/blog:latest
