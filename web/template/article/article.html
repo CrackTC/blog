@@ -1,6 +1,6 @@
 {{define "head"}}
 <link rel="preload" href="/static/js/postproc.js" as="script" />
-<link rel="preload" href="/static/js/mathjax/tex-chtml.js" as="script" />
+<link rel="stylesheet" href="/static/css/katex.min.css" />
 <link rel="preload" href="/static/js/highlightjs/highlight.min.js" as="script" />
 <link rel="preload" href="/static/js/highlightjs/lisp.min.js" as="script" />
 <link rel="preload" href="/static/js/highlightjs/nix.min.js" as="script" />
@@ -12,8 +12,13 @@
     <h1 id="title">{{.Title}}</h1>
     {{.Content}}
 </div>
-<script> MathJax = {tex: {inlineMath: [['$', '$']]}}; </script>
-<script src="/static/js/mathjax/tex-chtml.js"></script>
+<script defer src="/static/js/katex/katex.min.js"></script>
+<script defer src="/static/js/katex/auto-render.min.js" onload="renderMathInElement(document.body, {
+        delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+        ]
+    });"></script>
 <script src="/static/js/highlightjs/highlight.min.js"></script>
 <script src="/static/js/highlightjs/lisp.min.js"></script>
 <script src="/static/js/highlightjs/nix.min.js"></script>
