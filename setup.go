@@ -55,7 +55,7 @@ func setModTimeZero() {
 }
 
 func setup() {
-	path := "web/static/blog"
+	path := "web/var/blog"
 	if isNotExist(path) || isNotExist(filepath.Join(path, ".git")) {
 
 		if err := os.MkdirAll(path, 0755); err != nil {

@@ -71,14 +71,14 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	} else {
-		files := file.GetFileTimesRecursive("web/static/blog", h.ignoredPaths)
+		files := file.GetFileTimesRecursive("web/var/blog", h.ignoredPaths)
 		redisData := make([]any, len(files)*3)
 		data.Items = make([]itemData, 0, h.blogsPerPage)
 		data.HasNext = page*h.blogsPerPage < len(files)
 		for i, f := range files {
 			// remove extension
 			name := f.Name[:len(f.Name)-len(filepath.Ext(f.Name))]
-			path := url.Encode(f.Path[len("web/static/blog")+1:])
+			path := url.Encode(f.Path[len("web/var/blog")+1:])
 
 			redisData[i*3] = name
 			redisData[i*3+1] = path

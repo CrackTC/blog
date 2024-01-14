@@ -65,7 +65,7 @@ func (h Handler) ServeArticle(w http.ResponseWriter, path string) {
 			log.Printf("[ERROR] Failed to get value of key %s: %s\n", key, err.Error())
 		}
 
-		path = filepath.Join("web/static/blog", path)
+		path = filepath.Join("web/var/blog", path)
 		html := HtmlFromFile(path)
 		data.Content = template.HTML(html)
 
@@ -90,7 +90,7 @@ func (h Handler) ServeDir(w http.ResponseWriter, path string) {
 	data := dirData{Title: filepath.Base(path), Crumbs: GetCrumbs(path)}
 
 	// get list of files
-	if files, err := os.ReadDir(filepath.Join("web/static/blog", path)); err != nil {
+	if files, err := os.ReadDir(filepath.Join("web/var/blog", path)); err != nil {
 		log.Printf("[ERROR] Failed to read dir %s: %s\n", path, err.Error())
 		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 		return
@@ -127,7 +127,7 @@ func (h Handler) ServeDir(w http.ResponseWriter, path string) {
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	// determine whether it is a directory
-	if info, err := os.Stat(filepath.Join("web/static/blog", path)); err != nil {
+	if info, err := os.Stat(filepath.Join("web/var/blog", path)); err != nil {
 		log.Printf("[ERROR] Failed to stat %s: %s\n", path, err.Error())
 		http.Error(w, "404 Not Found", http.StatusNotFound)
 	} else if info.IsDir() {

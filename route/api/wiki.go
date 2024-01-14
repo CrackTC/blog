@@ -29,7 +29,7 @@ func (h Handler) getWikiDestination(name string) string {
 	if strings.ContainsRune(name, '/') { // absolute path
 		dest = name
 	} else { // find in filesystem
-		dest = file.FindFile("web/static/blog", name, h.ignoredPaths)
+		dest = file.FindFile("web/var/blog", name, h.ignoredPaths)
 	}
 
 	if dest == "" {

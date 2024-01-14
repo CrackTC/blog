@@ -6,7 +6,7 @@ services:
     ports:
       - "8880:8880"
     volumes:
-      - ./blog:/web/static/blog
+      - ./blog:/web/var/blog
     environment:
       - API_KEY=
       - PORT=8880
