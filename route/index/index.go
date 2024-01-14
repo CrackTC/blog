@@ -32,6 +32,6 @@ func NewHandler() Handler {
 		"web/template/index/index.html",
 		"web/template/index/index_main.html",
 	))
-	handler := Handler{tpl: tpl, fs: http.FileServer(http.Dir("web/static"))}
+	handler := Handler{tpl: tpl, fs: http.FileServer(http.Dir("web/index"))}
 	return handler
 }
