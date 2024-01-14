@@ -20,14 +20,16 @@ func updateRepo(path string, c <-chan time.Time) {
 	for range c {
 		err := git.PullRepo(path)
 		if err != nil {
-			log.Println("[ERROR] failed to update repo:", err.Error())
+			log.Println("[ERROR] failed to pull repo:", err.Error())
 			continue
 		}
+
 		err = git.UpdateModTime(path)
 		if err != nil {
 			log.Println("[ERROR] failed to update file mod time:", err.Error())
 			continue
 		}
+
 		err = redis.Flush()
 		if err != nil {
 			log.Println("[ERROR] failed to flush redis:", err.Error())
@@ -60,13 +62,15 @@ func setup() {
 			log.Fatal(err.Error())
 		}
 
-		url := config.Get().BlogRemoteURL
-		if err := git.CloneRepo(url, path); err != nil {
-			log.Fatal(err.Error())
+		err := git.CloneRepo(config.Get().BlogRemoteURL, path)
+		if err != nil {
+			log.Fatal("[ERROR] failed to clone repo:", err.Error())
 		}
 
 		setModTimeZero()
-		if err := git.UpdateModTime(path); err != nil {
+
+		err = git.UpdateModTime(path)
+		if err != nil {
 			log.Println("[ERROR] failed to update file mod time:", err.Error())
 		}
 	}

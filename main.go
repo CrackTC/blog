@@ -13,8 +13,7 @@ import (
 	"sora.zip/blog/route/whoami"
 )
 
-func main() {
-	c := config.Get()
+func serve(c *config.Config) {
 	setup()
 	http.Handle("/", index.NewHandler())
 	http.Handle("/api/", http.StripPrefix("/api/", api.NewHandler(c.APIKey, c.IgnoredPaths)))
@@ -26,4 +25,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func main() {
+	c := config.Get()
+	serve(c)
 }
