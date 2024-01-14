@@ -8,7 +8,6 @@ import (
 
 type Handler struct {
 	apiKey       string
-	blogRoot     string
 	ignoredPaths []string
 }
 
@@ -25,6 +24,6 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func NewHandler(apiKey string, blogRoot string, ignoredPaths []string) Handler {
-	return Handler{apiKey: apiKey, blogRoot: blogRoot, ignoredPaths: ignoredPaths}
+func NewHandler(apiKey string, ignoredPaths []string) Handler {
+	return Handler{apiKey: apiKey, ignoredPaths: ignoredPaths}
 }

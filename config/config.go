@@ -1,23 +1,20 @@
 package config
 
 import (
-	"encoding/json"
-	"io"
-	"log"
 	"os"
+	"strconv"
+	"strings"
 )
 
 type Config struct {
-	APIKey            string   `json:"api_key"`
-	Port              int      `json:"port"`
-	StaticPath        string   `json:"static_path"`
-	TemplatePath      string   `json:"template_path"`
-	IgnoredPaths      []string `json:"ignored_paths"`
-	BlogRemoteURL     string   `json:"blog_remote_url"`
-	BlogFetchInterval string   `json:"blog_fetch_interval"`
-	BlogsPerPage      int      `json:"blogs_per_page"`
-	RedisURL          string   `json:"redis_url"`
-	RedisExpiration   string   `json:"redis_expiration"`
+	APIKey            string
+	Port              int
+	IgnoredPaths      []string
+	BlogRemoteURL     string
+	BlogFetchInterval string
+	BlogsPerPage      int
+	RedisURL          string
+	RedisExpiration   string
 }
 
 var config *Config
@@ -26,8 +23,6 @@ func init() {
 	config = &Config{
 		APIKey:            "",
 		Port:              8880,
-		StaticPath:        "web/static",
-		TemplatePath:      "web/template",
 		IgnoredPaths:      []string{".git", ".github", ".gitignore", ".obsidian", ".obsidian.vimrc", "img", "cedict_ts.u8"},
 		BlogRemoteURL:     "",
 		BlogFetchInterval: "1h",
@@ -36,20 +31,42 @@ func init() {
 		RedisExpiration:   "240h",
 	}
 
-	// read from config.json
-	file, err := os.Open("config.json")
-	if err != nil {
-		log.Println("[info] config.json not found, using default config")
-		return
+	if (os.Getenv("API_KEY") != "") {
+		config.APIKey = os.Getenv("API_KEY")
 	}
-	defer func() {
-		_ = file.Close()
-	}()
-	decoder := json.NewDecoder(file)
-	config = &Config{}
-	err = decoder.Decode(config)
-	if err != nil && err != io.EOF {
-		panic(err)
+
+	if (os.Getenv("PORT") != "") {
+		port, err := strconv.Atoi(os.Getenv("PORT"))
+		if err == nil {
+			config.Port = port
+		}
+	}
+
+	if (os.Getenv("IGNORED_PATHS") != "") {
+		config.IgnoredPaths = strings.Split(os.Getenv("IGNORED_PATHS"), ":")
+	}
+
+	if (os.Getenv("BLOG_REMOTE_URL") != "") {
+		config.BlogRemoteURL = os.Getenv("BLOG_REMOTE_URL")
+	}
+
+	if (os.Getenv("BLOG_FETCH_INTERVAL") != "") {
+		config.BlogFetchInterval = os.Getenv("BLOG_FETCH_INTERVAL")
+	}
+
+	if (os.Getenv("BLOGS_PER_PAGE") != "") {
+		blogsPerPage, err := strconv.Atoi(os.Getenv("BLOGS_PER_PAGE"))
+		if err == nil {
+			config.BlogsPerPage = blogsPerPage
+		}
+	}
+
+	if (os.Getenv("REDIS_URL") != "") {
+		config.RedisURL = os.Getenv("REDIS_URL")
+	}
+
+	if (os.Getenv("REDIS_EXPIRATION") != "") {
+		config.RedisExpiration = os.Getenv("REDIS_EXPIRATION")
 	}
 }
 

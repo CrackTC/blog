@@ -36,8 +36,7 @@ func updateRepo(path string, c <-chan time.Time) {
 }
 
 func setModTimeZero() {
-	path := filepath.Join(config.Get().StaticPath, "blog")
-	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk("web/static/blog", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			log.Println("[ERROR] failed to walk file:", err.Error())
 			return nil
@@ -54,7 +53,7 @@ func setModTimeZero() {
 }
 
 func setup() {
-	path := filepath.Join(config.Get().StaticPath, "blog")
+	path := "web/static/blog"
 	if isNotExist(path) || isNotExist(filepath.Join(path, ".git")) {
 
 		if err := os.MkdirAll(path, 0755); err != nil {

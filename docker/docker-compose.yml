@@ -1,15 +1,22 @@
 services:
   blog:
     image: cracktc/blog
+    container_name: blog
     restart: always
     ports:
       - "8880:8880"
     volumes:
       - ./blog:/web/static/blog
-      - ./robots.txt:/web/static/robots.txt
-      - ./sitemap.xml:/web/static/sitemap.xml
-      - ./favicon.ico:/web/static/favicon.ico
-      - ./config.json:/config.json
+    environment:
+      - API_KEY=
+      - PORT=8880
+      - IGNORED_PATHS=
+      - BLOG_REMOTE_URL=
+      - BLOG_FETCH_INTERVAL=
+      - BLOGS_PER_PAGE=
+      - REDIS_URL=redis://redis:6379
+      - REDIS_EXPIRATION=
   redis:
     image: redis:alpine
+    container_name: blog-redis
     restart: always

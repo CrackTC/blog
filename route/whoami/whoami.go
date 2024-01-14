@@ -3,7 +3,6 @@ package whoami
 import (
 	"html/template"
 	"net/http"
-	"path/filepath"
 )
 
 type Handler struct {
@@ -21,9 +20,9 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
-func NewHandler(templatePath string) Handler {
+func NewHandler() Handler {
 	return Handler{tpl: template.Must(template.ParseFiles(
-		filepath.Join(templatePath, "index/whoami.html"),
-		filepath.Join(templatePath, "index/index_main.html"),
+		"web/template/index/whoami.html",
+		"web/template/index/index_main.html",
 	))}
 }

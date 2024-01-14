@@ -13,7 +13,6 @@ import (
 )
 
 type Handler struct {
-	blogRoot     string
 	ignoredPaths []string
 	tpl          map[string]*template.Template
 }
@@ -66,7 +65,7 @@ func (h Handler) ServeArticle(w http.ResponseWriter, path string) {
 			log.Printf("[ERROR] Failed to get value of key %s: %s\n", key, err.Error())
 		}
 
-		path = filepath.Join(h.blogRoot, path)
+		path = filepath.Join("web/static/blog", path)
 		html := HtmlFromFile(path)
 		data.Content = template.HTML(html)
 
@@ -91,7 +90,7 @@ func (h Handler) ServeDir(w http.ResponseWriter, path string) {
 	data := dirData{Title: filepath.Base(path), Crumbs: GetCrumbs(path)}
 
 	// get list of files
-	if files, err := os.ReadDir(filepath.Join(h.blogRoot, path)); err != nil {
+	if files, err := os.ReadDir(filepath.Join("web/static/blog", path)); err != nil {
 		log.Printf("[ERROR] Failed to read dir %s: %s\n", path, err.Error())
 		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 		return
@@ -128,7 +127,7 @@ func (h Handler) ServeDir(w http.ResponseWriter, path string) {
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	// determine whether it is a directory
-	if info, err := os.Stat(filepath.Join(h.blogRoot, path)); err != nil {
+	if info, err := os.Stat(filepath.Join("web/static/blog", path)); err != nil {
 		log.Printf("[ERROR] Failed to stat %s: %s\n", path, err.Error())
 		http.Error(w, "404 Not Found", http.StatusNotFound)
 	} else if info.IsDir() {
@@ -138,15 +137,15 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func NewHandler(blogRoot string, ignoredPaths []string, templatePath string) Handler {
+func NewHandler(ignoredPaths []string) Handler {
 	tpl := make(map[string]*template.Template)
 	tpl["article"] = template.Must(template.ParseFiles(
-		filepath.Join(templatePath, "article/article.html"),
-		filepath.Join(templatePath, "article/article_main.html"),
+		"web/template/article/article.html",
+		"web/template/article/article_main.html",
 	))
 	tpl["dir"] = template.Must(template.ParseFiles(
-		filepath.Join(templatePath, "article/dir.html"),
-		filepath.Join(templatePath, "article/article_main.html"),
+		"web/template/article/dir.html",
+		"web/template/article/article_main.html",
 	))
-	return Handler{blogRoot: blogRoot, ignoredPaths: ignoredPaths, tpl: tpl}
+	return Handler{ignoredPaths: ignoredPaths, tpl: tpl}
 }

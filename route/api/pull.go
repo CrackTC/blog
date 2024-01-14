@@ -22,8 +22,8 @@ func (h Handler) pull(w http.ResponseWriter, arguments map[string][]string) {
 	} else {
 		log.Println("[INFO] Pulling blog")
 		json.NewEncoder(w).Encode(response{Success: true, Message: "Pulling blog"})
-		git.PullRepo(h.blogRoot)
-		git.UpdateModTime(h.blogRoot)
+		git.PullRepo("web/static/blog")
+		git.UpdateModTime("web/static/blog")
 		redis.Flush()
 	}
 }

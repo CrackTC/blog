@@ -1,5 +1,5 @@
 build:
-	CGO_ENABLED=0 go build -o bin/blog
+	CGO_ENABLED=0 go build -ldflags "-s -w" -o bin/blog
 
 docker: FORCE
 	rm -rf docker/build

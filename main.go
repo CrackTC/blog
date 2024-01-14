@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"path/filepath"
 	"strconv"
 
 	"sora.zip/blog/config"
@@ -16,17 +15,13 @@ import (
 
 func main() {
 	c := config.Get()
-	blogPath := filepath.Join(c.StaticPath, "blog")
 	setup()
-	http.Handle("/", index.NewHandler(c.TemplatePath))
-	http.Handle("/robots.txt", http.FileServer(http.Dir(c.StaticPath)))
-	http.Handle("/favicon.ico", http.FileServer(http.Dir(c.StaticPath)))
-	http.Handle("/sitemap.xml", http.FileServer(http.Dir(c.StaticPath)))
-	http.Handle("/api/", http.StripPrefix("/api/", api.NewHandler(c.APIKey, blogPath, c.IgnoredPaths)))
-	http.Handle("/static/", http.StripPrefix("/static/", static.NewHandler(c.StaticPath)))
-	http.Handle("/article/", http.StripPrefix("/article/", article.NewHandler(blogPath, c.IgnoredPaths, c.TemplatePath)))
-	http.Handle("/recent/", http.StripPrefix("/recent/", recent.NewHandler(blogPath, c.BlogsPerPage, c.TemplatePath, c.IgnoredPaths)))
-	http.Handle("/whoami/", http.StripPrefix("/whoami/", whoami.NewHandler(c.TemplatePath)))
+	http.Handle("/", index.NewHandler())
+	http.Handle("/api/", http.StripPrefix("/api/", api.NewHandler(c.APIKey, c.IgnoredPaths)))
+	http.Handle("/static/", http.StripPrefix("/static/", static.NewHandler()))
+	http.Handle("/article/", http.StripPrefix("/article/", article.NewHandler(c.IgnoredPaths)))
+	http.Handle("/recent/", http.StripPrefix("/recent/", recent.NewHandler(c.BlogsPerPage, c.IgnoredPaths)))
+	http.Handle("/whoami/", http.StripPrefix("/whoami/", whoami.NewHandler()))
 	err := http.ListenAndServe(":"+strconv.Itoa(c.Port), nil)
 	if err != nil {
 		panic(err)
