@@ -14,6 +14,13 @@ func configQuotePath() error {
 	return exec.Command("git", "config", "--global", "core.quotepath", "false").Run()
 }
 
+func unquotePath(path string) string {
+	if path[0] == '"' && path[len(path)-1] == '"' {
+		return strings.Replace(path[1:len(path)-1], `\`, "", -1)
+	}
+	return path
+}
+
 func UpdateModTime(path string) error {
 	configQuotePath()
 	bytes, err := exec.Command("git", "-C", path, "ls-files").Output()
@@ -24,7 +31,10 @@ func UpdateModTime(path string) error {
 	files := strings.Split(string(bytes), "\n")
 
 	for _, file := range files {
-		file := file
+		if file == "" {
+			continue
+		}
+		file := unquotePath(file)
 		timeBytes, err := exec.Command("git", "-C", path, "log", "--date=local", "-1", "--format=%ct", file).Output()
 		if err != nil {
 			return err
