@@ -26,7 +26,7 @@ func UpdateModTime(path string) error {
 	for _, file := range strings.Split(files, "\n") {
 		file := file
 		go func() {
-			timeBytes, err := exec.Command("git", "-C", path, "log", "--date=local", "-1", "--format=@%ct", file).Output()
+			timeBytes, err := exec.Command("git", "-C", path, "log", "--date=local", "-1", "--format=%ct", file).Output()
 			fmt.Println(file, string(timeBytes))
 			if err != nil {
 				fmt.Println("[ERROR] failed to get file mod time:", err.Error())
