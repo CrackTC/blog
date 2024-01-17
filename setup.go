@@ -69,6 +69,7 @@ func setup() {
 
 		setModTimeZero()
 
+		git.ConfigQuotePath()
 		err = git.UpdateModTime(path)
 		if err != nil {
 			log.Println("[ERROR] failed to update file mod time:", err.Error())
