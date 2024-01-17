@@ -16,7 +16,6 @@ func configQuotePath() error {
 
 func UpdateModTime(path string) error {
 	configQuotePath()
-	// return exec.Command("sh", "-c", `git ls-files | while read file; do echo $file; touch -d $(git log --date=local -1 --format="@%ct" "$file") "$file"; done`).Run()
 	bytes, err := exec.Command("git", "-C", path, "ls-files").Output()
 	if err != nil {
 		return err
@@ -30,14 +29,20 @@ func UpdateModTime(path string) error {
 			timeBytes, err := exec.Command("git", "-C", path, "log", "--date=local", "-1", "--format=@%ct", file).Output()
 			fmt.Println(file, string(timeBytes))
 			if err != nil {
+				fmt.Println("[ERROR] failed to get file mod time:", err.Error())
 				return
 			}
 			timeSec, err := strconv.ParseInt(strings.TrimSpace(string(timeBytes)), 10, 64)
 			if err != nil {
+				fmt.Println("[ERROR] failed to parse file mod time:", err.Error())
 				return
 			}
 			time := time.Unix(timeSec, 0)
-			os.Chtimes(filepath.Join(path, file), time, time)
+			err = os.Chtimes(filepath.Join(path, file), time, time)
+			if err != nil {
+				fmt.Println("[ERROR] failed to update file mod time:", err.Error())
+				return
+			}
 			fmt.Println(file, time)
 		}()
 	}
