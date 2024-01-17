@@ -75,6 +75,10 @@ func setup() {
 		}
 	}
 
+	if isNotExist("web/static/blog") {
+		os.Link(path, "web/static/blog")
+	}
+
 	if duration, err := time.ParseDuration(config.Get().BlogFetchInterval); err != nil {
 		log.Fatal("[ERROR] failed to parse fetch interval:", err.Error())
 	} else {
