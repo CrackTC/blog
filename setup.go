@@ -38,7 +38,7 @@ func updateRepo(path string, c <-chan time.Time) {
 }
 
 func setModTimeZero() {
-	err := filepath.Walk("web/static/blog", func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk("web/var/blog", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			log.Println("[ERROR] failed to walk file:", err.Error())
 			return nil
@@ -67,13 +67,14 @@ func setup() {
 			log.Fatal("[ERROR] failed to clone repo:", err.Error())
 		}
 
-		setModTimeZero()
+	}
 
-		git.ConfigQuotePath()
-		err = git.UpdateModTime(path)
-		if err != nil {
-			log.Println("[ERROR] failed to update file mod time:", err.Error())
-		}
+	setModTimeZero()
+
+	git.ConfigQuotePath()
+	err := git.UpdateModTime(path)
+	if err != nil {
+		log.Println("[ERROR] failed to update file mod time:", err.Error())
 	}
 
 	if isNotExist("web/static/blog") {
