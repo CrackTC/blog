@@ -21,30 +21,24 @@ func UpdateModTime(path string) error {
 		return err
 	}
 
-	files := string(bytes)
+	files := strings.Split(string(bytes), "\n")
 
-	for _, file := range strings.Split(files, "\n") {
+	for _, file := range files {
 		file := file
-		go func() {
-			timeBytes, err := exec.Command("git", "-C", path, "log", "--date=local", "-1", "--format=%ct", file).Output()
-			fmt.Println(file, string(timeBytes))
-			if err != nil {
-				fmt.Println("[ERROR] failed to get file mod time:", err.Error())
-				return
-			}
-			timeSec, err := strconv.ParseInt(strings.TrimSpace(string(timeBytes)), 10, 64)
-			if err != nil {
-				fmt.Println("[ERROR] failed to parse file mod time:", err.Error())
-				return
-			}
-			time := time.Unix(timeSec, 0)
-			err = os.Chtimes(filepath.Join(path, file), time, time)
-			if err != nil {
-				fmt.Println("[ERROR] failed to update file mod time:", err.Error())
-				return
-			}
-			fmt.Println(file, time)
-		}()
+		timeBytes, err := exec.Command("git", "-C", path, "log", "--date=local", "-1", "--format=%ct", file).Output()
+		if err != nil {
+			return err
+		}
+		timeSec, err := strconv.ParseInt(strings.TrimSpace(string(timeBytes)), 10, 64)
+		if err != nil {
+			return err
+		}
+		time := time.Unix(timeSec, 0)
+		err = os.Chtimes(filepath.Join(path, file), time, time)
+		if err != nil {
+			return err
+		}
+		fmt.Println(file, time)
 	}
 
 	return nil
