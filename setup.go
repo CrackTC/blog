@@ -37,23 +37,6 @@ func updateRepo(path string, c <-chan time.Time) {
 	}
 }
 
-func setModTimeZero() {
-	err := filepath.Walk("web/var/blog", func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			log.Println("[ERROR] failed to walk file:", err.Error())
-			return nil
-		}
-		if info.IsDir() {
-			return nil
-		}
-		_ = os.Chtimes(path, time.Time{}, time.UnixMilli(1))
-		return nil
-	})
-	if err != nil {
-		log.Println(err.Error())
-	}
-}
-
 func setup() {
 	path := "web/var/blog"
 	if isNotExist(path) || isNotExist(filepath.Join(path, ".git")) {
@@ -69,16 +52,9 @@ func setup() {
 
 	}
 
-	setModTimeZero()
-
-	git.ConfigQuotePath()
 	err := git.UpdateModTime(path)
 	if err != nil {
 		log.Println("[ERROR] failed to update file mod time:", err.Error())
-	}
-
-	if isNotExist("web/static/blog") {
-		os.Symlink(path, "web/static/blog")
 	}
 
 	if duration, err := time.ParseDuration(config.Get().BlogFetchInterval); err != nil {

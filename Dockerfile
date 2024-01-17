@@ -7,5 +7,5 @@ FROM alpine
 COPY --from=builder /blog /blog
 COPY --from=builder /src/web /web
 COPY --from=builder /src/sharpdown /sharpdown
-RUN apk add --no-cache git perl
+RUN apk add --no-cache git
 ENTRYPOINT ["/blog"]
