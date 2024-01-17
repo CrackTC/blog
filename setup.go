@@ -77,7 +77,7 @@ func setup() {
 	}
 
 	if isNotExist("web/static/blog") {
-		os.Link(path, "web/static/blog")
+		os.Symlink(path, "web/static/blog")
 	}
 
 	if duration, err := time.ParseDuration(config.Get().BlogFetchInterval); err != nil {
