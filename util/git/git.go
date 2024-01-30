@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -50,6 +51,8 @@ func UpdateModTime(path string) error {
 		}
 		fmt.Println(file, time)
 	}
+
+	runtime.GC()
 
 	return nil
 }
